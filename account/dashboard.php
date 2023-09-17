@@ -21,7 +21,7 @@ if (!isset($_SESSION['id_u'])) {
         <div class="heading">
             DASHBOARD
         </div>
-        < <div class="content">
+        <div class="content">
             <div class="box">
 
                 <div class="theblog addblog">
@@ -41,37 +41,50 @@ if (!isset($_SESSION['id_u'])) {
                 </div>
             </div>
             <?php
+
             $id_user = $_SESSION['id_u'];
 
             include '../controller/connect.php';
 
-            $data = mysqli_query($conn, "SELECT * FROM blogs WHERE id_user = '$id_user' ");
+            // $data = mysqli_query($conn, "SELECT * FROM blogs WHERE id_user = '$id_user' ");
+            $data = mysqli_query($conn, "SELECT * FROM blogs JOIN user ON blogs.id_user=user.id_user");
+            // $userdata = mysqli_query($conn, "SELECT * FROM user WHERE id_user = '$id_user' ");
+            // $user = mysqli_fetch_array($userdata);
 
             while ($result = mysqli_fetch_array($data)) { ?>
                 <div class="box">
-                    <h4><?php echo $result['name'] ?></h4>
+                    <h4 class="blogtitle"><?php echo $result['name'] ?></h4>
                     <div class="theblog">
                         <p class="blogover">
                             <?php echo $result['article']; ?>
                         </p>
-                        <p>
+                        <p class="blogid">
                             Blog ID: <?php echo $result['id']; ?>
+                        </p>
+                        <p class="blogid">
+                            Author: <?php echo $result['username']; ?>
                         </p>
                         <a href="pageread.php?id=<?php echo $result['id'] ?> ">
                             <button class="btn input-btn">
                                 Read
                             </button>
                         </a>
-                        <a href="pageedit.php?id=<?php echo $result['id'] ?> ">
-                            <button class="btn input-btn">
-                                Edit
-                            </button>
-                        </a>
-                        <a href="../controller/delete.php?id=<?php echo $result['id'] ?>">
-                            <button class="btn input-btn">
-                                Delete
-                            </button>
-                        </a>
+                        <?php if ($result['id_user'] == $id_user) {
+                        ?>
+                            <a href="pageedit.php?id=<?php echo $result['id'] ?> ">
+                                <button class="btn input-btn">
+                                    Edit
+                                </button>
+                            </a>
+                            <a href="../controller/delete.php?id=<?php echo $result['id'] ?>">
+                                <button class="btn input-btn">
+                                    Delete
+                                </button>
+                            </a>
+                        <?php
+                        }
+                        ?>
+
                     </div>
                 </div>
 
@@ -80,8 +93,8 @@ if (!isset($_SESSION['id_u'])) {
             ?>
 
 
-    </div>
-    </div>
+            <!-- </div> -->
+        </div>
 </body>
 
 </html>
